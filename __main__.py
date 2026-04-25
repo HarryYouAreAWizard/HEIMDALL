@@ -471,9 +471,13 @@ def main()->None:
 
 
     if do_pca:    
-        print("Finding time series")
-        time_coefficients_md = compute_time_coefficients(tec_md_components, tec_md)
-        time_coefficients_int = compute_time_coefficients(tec_int_components, tec_int)
+        print("Finding time series")    
+        # pick out last five days
+        n_days = 5
+        tec_md_short = tec_md_short[-n_days * (24*60)//5:]
+        tec_int_short = tec_int_short[-n_days * (24*60)//5:]
+        time_coefficients_md = compute_time_coefficients(tec_md_components, tec_md_short)
+        time_coefficients_int = compute_time_coefficients(tec_int_components, tec_int_short)
 
     #-------------plot components-------------
     if plot_principal_components:
