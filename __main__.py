@@ -499,8 +499,8 @@ def main()->None:
         n_rows = 4
         fig_md, axs_md = subplots(2, n_rows, figsize=(15, 15))
         fig_int, axs_int = subplots(2, n_rows, figsize=(15, 15))
-        component_and_timeseries_plot(fig_md, axs_md, tec_md_components[:, :, :n_rows], time, time_coefficients_md[:n_rows, :], title="Midday", geo_labels=True)
-        component_and_timeseries_plot(fig_int, axs_int, tec_int_components[:, :, :n_rows], time, time_coefficients_int[:n_rows, :], title="Geographic", geo_labels=False)
+        component_and_timeseries_plot(fig_md, axs_md, tec_md_components[:, :, :n_rows], time[-n_days:], time_coefficients_md[:n_rows, :], title="Midday", geo_labels=True)
+        component_and_timeseries_plot(fig_int, axs_int, tec_int_components[:, :, :n_rows], time[-n_days:], time_coefficients_int[:n_rows, :], title="Geographic", geo_labels=False)
         fig_md.savefig("figures" + file_seperator + "Overview Midday.png")
         fig_int.savefig("figures" + file_seperator + "Overview Geographic.png")
 
