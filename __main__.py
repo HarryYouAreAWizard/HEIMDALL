@@ -223,7 +223,7 @@ def time_series_plot(fig:plt.figure, axs:plt.axes, time:np.ndarray, time_series:
     time = [datetime.datetime.fromtimestamp(t) for t in time]
     for i in range(time_series.shape[0]):
         axs[i].scatter(time, time_series[i], s=1)
-        axs[i].set_xticks([time[i] for i in range(len(time)) if i%1000==0])
+        axs[i].set_xticks([time[i] for i in range(len(time)) if i%10000==0])
         axs[i].set_xticklabels(axs[i].get_xticklabels(), rotation=45)
     fig.suptitle(title)
     fig.tight_layout()
