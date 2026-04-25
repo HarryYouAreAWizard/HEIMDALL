@@ -411,7 +411,7 @@ def extract_image_at_18UTC(tec, time):
 def main()->None:
     # flags
     refind_centers = 0
-    rebuild_master_data = 0
+    rebuild_master_data = 1
     reinterpolate = 0
     rebuild_sets = 0
     do_pca = 1

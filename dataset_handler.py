@@ -12,7 +12,7 @@ def load_all_in_folder()->dict:
     # datafolder = r"data"
     datafolder = r"/data/nonie"
     """Load all datasets in the data folder and return them as a dict with filename as key and dataset as value."""
-    datafiles = os.listdir(datafolder)
+    datafiles = os.listdir(datafolder)[:5]
     datasets = dict()
     for i, datafile in enumerate(datafiles):
         path = datafolder + "\\" + datafile
