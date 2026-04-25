@@ -73,7 +73,7 @@ def build_large_dataset(title="non_shifted_tec_", extract_northern=False, small_
     title += ".npy"
     print(f"Saving master data at {title}")
     # np.save(title, master_dataset)
-    np.save(f"/data/nonie/masterdata/title", master_dataset)
+    np.save(f"/data/nonie/masterdata/{title}", master_dataset)
 
 #----------------------interpolation----------------------
 def interpolate_tec(data:array)->array:
