@@ -1,7 +1,7 @@
 
 
 import numpy as np
-from TEC.TEC import load_naive as load_single, make_animation
+from incremental_pca_torch import IncrementalPCA
 
 #----------------------incremental implementation----------------------
 def weight_by_latitude(tec: np.ndarray) -> np.ndarray:
