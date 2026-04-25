@@ -418,7 +418,7 @@ def main()->None:
     plot_principal_components = 1
     plot_time_series = 1
     plot_both = 1
-    animate = 1
+    animate = 0
     extract_18UTC_images = 1
 
     number_of_components = 9
