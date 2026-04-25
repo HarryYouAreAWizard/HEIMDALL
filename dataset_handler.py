@@ -28,7 +28,7 @@ def load_all_in_folder()->dict:
     return datasets
 
 
-def build_large_dataset(title="..\\master_data\\non_shifted_tec_", extract_northern=False, small_data=False)->None:
+def build_large_dataset(title="non_shifted_tec_", extract_northern=False, small_data=False)->None:
     """Build a large dataset by merging all available datasets in the data folder.
     The resulting dataset is saved as a numpy array in the master_data folder.  """
     # load all available datasets
@@ -72,7 +72,8 @@ def build_large_dataset(title="..\\master_data\\non_shifted_tec_", extract_north
 
     title += ".npy"
     print(f"Saving master data at {title}")
-    np.save(title, master_dataset)
+    # np.save(title, master_dataset)
+    np.save(f"/data/nonie/masterdata/title")
 
 #----------------------interpolation----------------------
 def interpolate_tec(data:array)->array:
