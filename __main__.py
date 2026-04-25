@@ -17,8 +17,13 @@ from dataset_handler import build_large_dataset, interpolate_tec
 from centering import get_peaks, center_concomic, center_midday, center_midnight
 
 # changes depending on system
+<<<<<<< Updated upstream
  # file_seperator = "\\"
 # file_seperator = "/"
+=======
+# file_seperator = "\\"
+file_seperator = "/"
+>>>>>>> Stashed changes
 
 figurefolder = "figures" + file_seperator
 datafolder = "..\data"
