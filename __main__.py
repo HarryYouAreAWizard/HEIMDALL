@@ -412,12 +412,12 @@ def main()->None:
     # flags
     refind_centers = 0
     rebuild_master_data = 1
-    reinterpolate = 0
-    rebuild_sets = 0
-    do_pca = 1
-    plot_principal_components = 1
-    plot_time_series = 1
-    plot_both = 1
+    reinterpolate = 1
+    rebuild_sets = 1
+    do_pca = 0
+    plot_principal_components = 0
+    plot_time_series = 0
+    plot_both = 0
     animate = 0
     extract_18UTC_images = 0
 
