@@ -6,14 +6,16 @@ from numpy import array, zeros, save, load
 from scipy import ndimage
 from TEC.TEC import load_naive as load_single
 
+
 #----------------------dataset builder----------------------
 def load_all_in_folder()->dict:
+    # datafolder = r"data"
+    datafolder = r"/data/nonie"
     """Load all datasets in the data folder and return them as a dict with filename as key and dataset as value."""
-    folder = r"data"
-    datafiles = os.listdir(folder)
+    datafiles = os.listdir(datafolder)
     datasets = dict()
     for i, datafile in enumerate(datafiles):
-        path = folder + "\\" + datafile
+        path = datafolder + "\\" + datafile
         try:
             data = load_single(path, time_format="unix")
             datasets[datafile] = data

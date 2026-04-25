@@ -16,7 +16,13 @@ from principal_component_analysis import PCA as myPCA # unused
 from dataset_handler import build_large_dataset, interpolate_tec
 from centering import get_peaks, center_concomic, center_midday, center_midnight
 
+# changes depending on system
+file_seperator = "\\"
+# file_seperator = "/"
 
+figurefolder = "figures" + file_seperator
+datafolder = "..\data"
+datafolder = "/data/nonie/"
 #-------------------------------function definitions-------------------------------
 #----------------------principal component analysis----------------------
 def weight_by_latitude(tec: np.ndarray) -> np.ndarray:
@@ -168,7 +174,7 @@ def plot_components(fig: plt.Figure, axs: np.ndarray, tec_components: np.ndarray
     fig.supylabel("Latitude index")
     fig.suptitle(title)
     fig.tight_layout()
-    fig.savefig(f"figures\\{title}.png")
+    fig.savefig(f"figures" + file_seperator + "{title}.png")
 
 def plot_components_polar(fig: plt.Figure, axs: np.ndarray, tec_components: np.ndarray, title: str = "components", geo_labels=False)->None:
     """Plot the principal components of the TEC data as circular polar plots."""
@@ -209,7 +215,7 @@ def plot_components_polar(fig: plt.Figure, axs: np.ndarray, tec_components: np.n
 
     fig.suptitle(title)
     fig.tight_layout()
-    fig.savefig(f"figures\\{title}.png", dpi=150)
+    fig.savefig(f"figures" + file_seperator + "{title}.png", dpi=150)
 
 def time_series_plot(fig:plt.figure, axs:plt.axes, time:np.ndarray, time_series:np.ndarray, title:str)->None:
     axs = axs.flatten()
@@ -220,7 +226,7 @@ def time_series_plot(fig:plt.figure, axs:plt.axes, time:np.ndarray, time_series:
         axs[i].set_xticklabels(axs[i].get_xticklabels(), rotation=45)
     fig.suptitle(title)
     fig.tight_layout()
-    fig.savefig(f"figures\\{title}")
+    fig.savefig(f"figures" + file_seperator + "{title}")
 
 def component_and_timeseries_plot(fig, axs, tec_components, time, time_coefficients, title, *args, **kwargs):
     n_components = tec_components.shape[2]
@@ -295,7 +301,7 @@ def make_polar_animation(tec, time, title, save=False, geo_labels=False):
     anim = animation.FuncAnimation(fig, update, tec.shape[2], interval=1)
 
     if save: 
-        anim.save("figures\\month_animation.gif", writer="pillow", fps=60)
+        anim.save("figures" + file_seperator + "month_animation.gif", writer="pillow", fps=60)
 
     return anim
 
@@ -396,7 +402,7 @@ def extract_image_at_18UTC(tec, time):
             print(DT)
             fig, ax = plot_single_polar(tec[:, :, i])
             fig.suptitle(f"{DT.day}/{DT.month}-{DT.year}, {DT.hour}:{DT.minute}")
-            fig.savefig(f"animation_breakdowns\\{DT.day}.png")
+            fig.savefig(f"animation_breakdowns" + file_seperator + "{DT.day}.png")
             close()
             
 
@@ -424,13 +430,13 @@ def main()->None:
 
     if reinterpolate or rebuild_sets:
         print(f"loading master data...")
-        master_data = np.load("master_data\\raw_northern_tec.npy", )
+        master_data = np.load("master_data" + file_seperator + "raw_northern_tec.npy", )
         tec = master_data
 
         #-------------interpolate-------------
         print(f"interpolating...")
         tec = interpolate_tec(tec)
-        np.save("master_data\\interpolated_tec.npy", tec)
+        np.save("master_data" + file_seperator + "interpolated_tec.npy", tec)
     
     if rebuild_sets:
 
@@ -439,12 +445,12 @@ def main()->None:
         # do each set seperately, otherwise it gets too memory intense
         tec_md = center_midday(tec)
         tec_md = subtract_mean(tec_md)
-        np.save("master_data\\tec_midday.npy", tec_md)
+        np.save("master_data" + file_seperator + "tec_midday.npy", tec_md)
 
     print("loading data")
-    tec_md = np.load("master_data\\tec_midday.npy")
-    tec_raw = np.load("master_data\\raw_northern_tec.npy")
-    tec_int = np.load("master_data\\interpolated_tec.npy")
+    tec_md = np.load("master_data" + file_seperator + "tec_midday.npy")
+    tec_raw = np.load("master_data" + file_seperator + "raw_northern_tec.npy")
+    tec_int = np.load("master_data" + file_seperator + "interpolated_tec.npy")
 
     # construct time. Based on known time period. Should be updated with new data
     time_start = datetime.datetime(year=2026, month=1, day=3, hour=0, minute=0, second=0).timestamp()
@@ -491,8 +497,8 @@ def main()->None:
         fig_int, axs_int = subplots(2, n_rows, figsize=(15, 15))
         component_and_timeseries_plot(fig_md, axs_md, tec_md_components[:, :, :n_rows], time, time_coefficients_md[:n_rows, :], title="", geo_labels=True)
         component_and_timeseries_plot(fig_int, axs_int, tec_int_components[:, :, :n_rows], time, time_coefficients_int[:n_rows, :], title="", geo_labels=False)
-        fig_md.savefig("figures\\Overview Midday.png")
-        fig_int.savefig("figures\\Overview Geographic.png")
+        fig_md.savefig("figures" + file_seperator + "Overview Midday.png")
+        fig_int.savefig("figures" + file_seperator + "Overview Geographic.png")
 
 
     #-------------animation-------------
@@ -505,13 +511,13 @@ def main()->None:
         
         # make_polar_viewer(tec_raw, time, "midday centered")
         anim = make_polar_animation(tec_md, time, title="Midday centered", save=False, geo_labels=True)
-        anim.save("figures\\gifs\\Midday centered.gif", writer="pillow")
+        anim.save("figures" + file_seperator + "gifs" + file_seperator + "Midday centered.gif", writer="pillow")
         del tec_md; del anim
         anim = make_polar_animation(tec_raw, time, title="Raw TEC", save=False)
-        anim.save("figures\\gifs\\Raw.gif", writer="pillow")
+        anim.save("figures" + file_seperator + "gifs" + file_seperator + "Raw.gif", writer="pillow")
         del tec_raw; del anim
         anim = make_polar_animation(tec_int, time, title="Interpolated centered", save=False)
-        anim.save("figures\\gifs\\Interpolated.gif", writer="pillow")
+        anim.save("figures" + file_seperator + "gifs" + file_seperator + "Interpolated.gif", writer="pillow")
         del tec_int; del anim
         # show()
 
