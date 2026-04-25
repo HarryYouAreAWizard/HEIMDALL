@@ -11,8 +11,13 @@ from matplotlib.pyplot import subplots, imshow, show, close
 from incremental_pca_torch import IncrementalPCA
 
 # module imports
-from TEC.TEC import load_naive as load_single, make_animation
-from principal_component_analysis import PCA as myPCA # unused
+# from TEC.TEC import load_naive as load_single, make_animation
+from principal_component_analysis import (
+    find_principal_components, 
+    check_orthonomality, 
+    subtract_mean, 
+    compute_time_coefficients
+)
 from dataset_handler import build_large_dataset, interpolate_tec
 from centering import get_peaks, center_concomic, center_midday, center_midnight
 
@@ -296,6 +301,7 @@ def main()->None:
     animate = 0
     extract_18UTC_images = 1
 
+    n_days = 10 * (24*60)//5 # for time series plot
     number_of_components = 9
     plot_size = plot_geo(number_of_components)
 
@@ -347,7 +353,6 @@ def main()->None:
     if do_pca:    
         print("Finding time series")    
         # pick out last five days
-        n_days = 5 * (24*60)//5
         tec_md_short = tec_md[:, :, -n_days:]
         tec_int_short = tec_int[:, :, -n_days:]
         time_coefficients_md = compute_time_coefficients(tec_md_components, tec_md_short)
