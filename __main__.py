@@ -421,7 +421,6 @@ def main()->None:
     animate = 1
     extract_18UTC_images = 1
 
-
     number_of_components = 9
     plot_size = plot_geo(number_of_components)
 
@@ -474,8 +473,8 @@ def main()->None:
         print("Finding time series")    
         # pick out last five days
         n_days = 5
-        tec_md_short = tec_md_short[-n_days * (24*60)//5:]
-        tec_int_short = tec_int_short[-n_days * (24*60)//5:]
+        tec_md_short = tec_md[-n_days * (24*60)//5:]
+        tec_int_short = tec_int[-n_days * (24*60)//5:]
         time_coefficients_md = compute_time_coefficients(tec_md_components, tec_md_short)
         time_coefficients_int = compute_time_coefficients(tec_int_components, tec_int_short)
 
