@@ -17,7 +17,7 @@ from dataset_handler import build_large_dataset, interpolate_tec
 from centering import get_peaks, center_concomic, center_midday, center_midnight
 
 # changes depending on system
-file_seperator = "\\"
+ # file_seperator = "\\"
 # file_seperator = "/"
 
 figurefolder = "figures" + file_seperator
