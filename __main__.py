@@ -17,13 +17,9 @@ from dataset_handler import build_large_dataset, interpolate_tec
 from centering import get_peaks, center_concomic, center_midday, center_midnight
 
 # changes depending on system
-<<<<<<< Updated upstream
- # file_seperator = "\\"
-# file_seperator = "/"
-=======
+
 # file_seperator = "\\"
 file_seperator = "/"
->>>>>>> Stashed changes
 
 figurefolder = "figures" + file_seperator
 datafolder = "..\data"
@@ -435,13 +431,13 @@ def main()->None:
 
     if reinterpolate or rebuild_sets:
         print(f"loading master data...")
-        master_data = np.load("master_data" + file_seperator + "raw_northern_tec.npy", )
+        master_data = np.load("data/nonie/masterdata" + file_seperator + "raw_northern_tec.npy", )
         tec = master_data
 
         #-------------interpolate-------------
         print(f"interpolating...")
         tec = interpolate_tec(tec)
-        np.save("master_data" + file_seperator + "interpolated_tec.npy", tec)
+        np.save("data/nonie/masterdata" + file_seperator + "interpolated_tec.npy", tec)
     
     if rebuild_sets:
 
@@ -450,12 +446,12 @@ def main()->None:
         # do each set seperately, otherwise it gets too memory intense
         tec_md = center_midday(tec)
         tec_md = subtract_mean(tec_md)
-        np.save("master_data" + file_seperator + "tec_midday.npy", tec_md)
+        np.save("data/nonie/masterdata" + file_seperator + "tec_midday.npy", tec_md)
 
     print("loading data")
-    tec_md = np.load("master_data" + file_seperator + "tec_midday.npy")
-    tec_raw = np.load("master_data" + file_seperator + "raw_northern_tec.npy")
-    tec_int = np.load("master_data" + file_seperator + "interpolated_tec.npy")
+    tec_md = np.load("data/nonie/masterdata" + file_seperator + "tec_midday.npy")
+    tec_raw = np.load("data/nonie/masterdata" + file_seperator + "raw_northern_tec.npy")
+    tec_int = np.load("data/nonie/masterdata" + file_seperator + "interpolated_tec.npy")
 
     # construct time. Based on known time period. Should be updated with new data
     time_start = datetime.datetime(year=2026, month=1, day=3, hour=0, minute=0, second=0).timestamp()
