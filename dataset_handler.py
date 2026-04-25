@@ -11,7 +11,7 @@ file_seperator = "/"
 #----------------------dataset builder----------------------
 def load_all_in_folder()->dict:
     # datafolder = r"data"
-    datafolder = r"/data/nonie"
+    datafolder = r"/data/nonie/tec_data"
     """Load all datasets in the data folder and return them as a dict with filename as key and dataset as value."""
     datafiles = os.listdir(datafolder)
     datasets = dict()
