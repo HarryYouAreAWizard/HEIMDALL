@@ -6,6 +6,7 @@ from numpy import array, zeros, save, load
 from scipy import ndimage
 from TEC.TEC import load_naive as load_single
 
+file_seperator = "/"
 
 #----------------------dataset builder----------------------
 def load_all_in_folder()->dict:
@@ -15,7 +16,7 @@ def load_all_in_folder()->dict:
     datafiles = os.listdir(datafolder)[:5]
     datasets = dict()
     for i, datafile in enumerate(datafiles):
-        path = datafolder + "\\" + datafile
+        path = datafolder + file_seperator + datafile
         try:
             data = load_single(path, time_format="unix")
             datasets[datafile] = data
