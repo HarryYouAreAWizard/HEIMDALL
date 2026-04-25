@@ -71,7 +71,7 @@ def build_large_dataset(title="non_shifted_tec_", extract_northern=False, small_
         title += "global"
 
     title += ".npy"
-    print(f"Saving master data at {title}")
+    print(f"Saving master data at /data/nonie/masterdata/{title}")
     # np.save(title, master_dataset)
     np.save(f"/data/nonie/masterdata/{title}", master_dataset)
 
