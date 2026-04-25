@@ -472,9 +472,9 @@ def main()->None:
     if do_pca:    
         print("Finding time series")    
         # pick out last five days
-        n_days = 5
-        tec_md_short = tec_md[:, :, -n_days * (24*60)//5:]
-        tec_int_short = tec_int[:, :, -n_days * (24*60)//5:]
+        n_days = 5 * (24*60)//5
+        tec_md_short = tec_md[:, :, -n_days:]
+        tec_int_short = tec_int[:, :, -n_days:]
         time_coefficients_md = compute_time_coefficients(tec_md_components, tec_md_short)
         time_coefficients_int = compute_time_coefficients(tec_int_components, tec_int_short)
 
@@ -491,9 +491,9 @@ def main()->None:
     #-------------plot time series-------------
     if plot_time_series:
         fig_md, axs_md=subplots(number_of_components//plot_size, plot_size, figsize=(10, 10))
-        time_series_plot(fig_md, axs_md, time, time_coefficients_md, title="Coefficients, Northern Midday Components")
+        time_series_plot(fig_md, axs_md, time[-n_days:], time_coefficients_md, title="Coefficients, Northern Midday Components")
         fig_int, axs_int=subplots(number_of_components//plot_size, plot_size, figsize=(10, 10))
-        time_series_plot(fig_md, axs_md, time, time_coefficients_md, title="Coefficients, Nothern Geographic Components")
+        time_series_plot(fig_md, axs_md, time[-n_days:], time_coefficients_md, title="Coefficients, Nothern Geographic Components")
 
     if plot_both:
         n_rows = 4
