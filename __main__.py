@@ -401,7 +401,7 @@ def main()->None:
 
     #-------------plot components-------------
     if plot_principal_components:
-        print(f"Plotting")
+        print(f"Plotting components...")
         fig_md, axs_md = subplots(number_of_components//plot_size, plot_size, figsize=(14, 14), 
                            subplot_kw=dict(projection='polar'))
         plot_components_polar(fig_md, axs_md, tec_md_components, "Nothern Components Midday", geo_labels=True)
@@ -411,6 +411,7 @@ def main()->None:
 
     #-------------plot time series-------------
     if plot_time_series:
+        print(f"Plotting time series...")
         fig_md, axs_md=subplots(number_of_components//plot_size, plot_size, figsize=(10, 10))
         time_series_plot(fig_md, axs_md, time[-n_days:], time_coefficients_md, title="Coefficients, Northern Midday Components")
         fig_int, axs_int=subplots(number_of_components//plot_size, plot_size, figsize=(10, 10))
