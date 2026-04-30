@@ -413,9 +413,11 @@ def main()->None:
     if plot_time_series:
         print(f"Plotting time series...")
         fig_md, axs_md=subplots(number_of_components//plot_size, plot_size, figsize=(10, 10))
-        time_series_plot(fig_md, axs_md, time[-n_days:], time_coefficients_md, title="Coefficients, Northern Midday Components")
+        time_series_plot(fig_md, axs_md, time[-n_days:], 
+                         time_coefficients_md[-n_days:], title="Coefficients, Northern Midday Components")
         fig_int, axs_int=subplots(number_of_components//plot_size, plot_size, figsize=(10, 10))
-        time_series_plot(fig_md, axs_md, time[-n_days:], time_coefficients_md, title="Coefficients, Nothern Geographic Components")
+        time_series_plot(fig_md, axs_md, time[-n_days:], 
+                         time_coefficients_md[-n_days:], title="Coefficients, Nothern Geographic Components")
 
     if plot_both:
         n_rows = 4
