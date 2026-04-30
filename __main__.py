@@ -197,19 +197,18 @@ def make_polar_animation(tec, time, title, save=False, geo_labels=False):
     fig.suptitle(f"{DT.day},{DT.hour}")
     
     # ax.set_aspect(360/30)
-    
     def update(i):
         # i *= 50
         # if not i%50 == 0:
             # return
         # pcolormesh stores values as a flattened array
-        mappable.set_array(tec[:, :, i].ravel())
-        ts = time[i]
+        mappable.set_array(tec[:, :, i*10].ravel())
+        ts = time[i*10]
         DT = datetime.datetime.fromtimestamp(ts)
         fig.suptitle(f"{DT.day}/{DT.month}-{DT.year}, {DT.hour}:{DT.minute}")
-        print(f"animating:   {i} / {tec.shape[2]}     ", end="\r")
+        print(f"animating:   {i} / {tec.shape[2]//10}     ", end="\r")
 
-    anim = animation.FuncAnimation(fig, update, tec.shape[2], interval=1)
+    anim = animation.FuncAnimation(fig, update, tec.shape[2]//10, interval=1)
 
     if save: 
         anim.save("figures" + file_seperator + "month_animation.gif", writer="pillow", fps=60)
@@ -465,7 +464,7 @@ def main()->None:
 
         print("animating")
         length_idx = 1000
-        starting_point = -10000
+        starting_point = -10500
         tec_md =   tec_md[:, :, starting_point:starting_point + length_idx]
         tec_raw = tec_raw[:, :, starting_point:starting_point + length_idx]
         tec_int = tec_int[:, :, starting_point:starting_point + length_idx]
