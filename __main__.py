@@ -129,7 +129,7 @@ def time_series_plot(fig:plt.figure, axs:plt.axes, time:np.ndarray, time_series:
 
     for i in range(time_series.shape[0]):
         axs[i].scatter(time, time_series[i], s=1)
-        axs[i].set_xticks([time[i] for i in range(len(time)) if i%10==0])
+        axs[i].set_xticks([time[i] for i in range(len(time)) if i%1000==0])
         axs[i].set_xticklabels(axs[i].get_xticklabels(), rotation=45)
     fig.suptitle(title)
     fig.tight_layout()
@@ -320,7 +320,7 @@ def main()->None:
     rebuild_master_data = 0
     reinterpolate = 0
     rebuild_sets = 0
-    do_pca = 1
+    do_pca = 0
     plot_principal_components = 0
     plot_time_series = 0
     plot_both = 1
