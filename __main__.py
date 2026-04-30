@@ -316,16 +316,16 @@ def extract_image_at_18UTC(tec, time):
 #-------------------------------main-------------------------------
 def main()->None:
     # flags
-    refind_centers =            0
-    rebuild_master_data =       0
-    reinterpolate =             0
-    rebuild_sets =              0
-    do_pca =                    0
+    refind_centers = 0
+    rebuild_master_data = 0
+    reinterpolate = 0
+    rebuild_sets = 0
+    do_pca = 0
     plot_principal_components = 1
-    plot_time_series =          1
-    plot_both =                 1
-    animate =                   0
-    extract_18UTC_images =      1
+    plot_time_series = 1
+    plot_both = 1
+    animate = 0
+    extract_18UTC_images = 0
 
     n_days = 10 * (24*60)//5 # for time series plot
     number_of_components = 9
@@ -455,6 +455,7 @@ def main()->None:
         # show()
 
     if extract_18UTC_images:
+        tec_md = np.load("/data/nonie/masterdata" + file_seperator + "tec_midday.npy")
         extract_image_at_18UTC(tec_md, time)
 
 if __name__ == "__main__":
