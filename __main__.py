@@ -389,10 +389,10 @@ def main()->None:
         time_coefficients_int = np.load("/data/nonie/masterdata/time_series_geographic.npy")
         tec_md_components = np.load("/data/nonie/masterdata/components_midday.npy")
         tec_int_components = np.load("/data/nonie/masterdata/components_geographic.npy")
-        print(f"{time_coefficients_md = }")
-        print(f"{time_coefficients_int = }")
-        print(f"{tec_md_components = }")
-        print(f"{tec_int_components = }")
+        print(f"{time_coefficients_md.shape = }")
+        print(f"{time_coefficients_int.shape = }")
+        print(f"{tec_md_components.shape = }")
+        print(f"{tec_int_components.shape = }")
 
     # # construct time. Based on known time period. Should be updated with new data
     # time_start = datetime.datetime(year=2026, month=1, day=3, hour=0, minute=0, second=0).timestamp()
