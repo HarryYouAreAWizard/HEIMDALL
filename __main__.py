@@ -417,9 +417,11 @@ def main()->None:
         fig_md, axs_md = subplots(number_of_components//plot_size, plot_size, figsize=(14, 14), 
                            subplot_kw=dict(projection='polar'))
         plot_components_polar(fig_md, axs_md, tec_md_components, "Nothern Components Midday", geo_labels=True)
+        fig_md.savefig("figures/Nothern Components Midday.png")
         fig_int, axs_int = subplots(number_of_components//plot_size, plot_size, figsize=(14, 14), 
                     subplot_kw=dict(projection='polar'))
         plot_components_polar(fig_int, axs_int, tec_int_components, "Nothern Components Geographic", geo_labels=False)
+        fig_int.savefig("figures/Nothern Components Geographic.png")
 
     #-------------plot time series-------------
     if plot_time_series:
