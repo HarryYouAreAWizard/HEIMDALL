@@ -199,7 +199,7 @@ def make_polar_animation(tec, time, title, save=False, geo_labels=False):
     # ax.set_aspect(360/30)
     
     def update(i):
-        i *= 50
+        # i *= 50
         # if not i%50 == 0:
             # return
         # pcolormesh stores values as a flattened array
@@ -465,9 +465,10 @@ def main()->None:
 
         print("animating")
         length_idx = 1000
-        tec_md = tec_md[:, :, :length_idx]
-        tec_raw = tec_raw[:, :, :length_idx]
-        tec_int = tec_int[:, :, :length_idx]
+        starting_point = -10000
+        tec_md =   tec_md[:, :, starting_point:starting_point + length_idx]
+        tec_raw = tec_raw[:, :, starting_point:starting_point + length_idx]
+        tec_int = tec_int[:, :, starting_point:starting_point + length_idx]
         
         # make_polar_viewer(tec_raw, time, "midday centered")
         anim = make_polar_animation(tec_md, time, title="Midday centered", save=True, geo_labels=True)
