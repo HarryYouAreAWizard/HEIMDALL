@@ -311,16 +311,16 @@ def extract_image_at_18UTC(tec, time):
 #-------------------------------main-------------------------------
 def main()->None:
     # flags
-    refind_centers = 0
-    rebuild_master_data = 1
-    reinterpolate = 0
-    rebuild_sets = 0
-    do_pca = 0
+    refind_centers =            0
+    rebuild_master_data =       0
+    reinterpolate =             0
+    rebuild_sets =              0
+    do_pca =                    0
     plot_principal_components = 1
-    plot_time_series = 1
-    plot_both = 1
-    animate = 0
-    extract_18UTC_images = 1
+    plot_time_series =          1
+    plot_both =                 1
+    animate =                   0
+    extract_18UTC_images =      1
 
     n_days = 10 * (24*60)//5 # for time series plot
     number_of_components = 9
@@ -384,11 +384,15 @@ def main()->None:
 
 
     if not do_pca:
+        print("loading components and time series...")
         time_coefficients_md = np.load("/data/nonie/masterdata/time_series_midday.npy")
         time_coefficients_int = np.load("/data/nonie/masterdata/time_series_geographic.npy")
         tec_md_components = np.load("/data/nonie/masterdata/components_midday.npy")
         tec_int_components = np.load("/data/nonie/masterdata/components_geographic.npy")
-
+        print(f"{time_coefficients_md = }")
+        print(f"{time_coefficients_int = }")
+        print(f"{tec_md_components = }")
+        print(f"{tec_int_components = }")
 
     # # construct time. Based on known time period. Should be updated with new data
     # time_start = datetime.datetime(year=2026, month=1, day=3, hour=0, minute=0, second=0).timestamp()
