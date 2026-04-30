@@ -1,5 +1,6 @@
 
 # general imports
+import os
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,7 +9,7 @@ import matplotlib.colors as colors
 # specific imports
 from numpy import array, reshape, zeros
 from matplotlib.pyplot import subplots, imshow, show, close
-from incremental_pca_torch import IncrementalPCA
+
 
 # module imports
 # from TEC.TEC import load_naive as load_single, make_animation
@@ -27,6 +28,26 @@ file_seperator = "/"
 figurefolder = "figures" + file_seperator
 datafolder = "..\data"
 datafolder = "/data/nonie/"
+
+
+def time_from_gps_files()->np.ndarray:
+    path = "/data/nonie/tec_data"
+    list_of_files = os.listdir(path)
+    dates = []
+    for file in list_of_files:
+        year = file[3:5]
+        month = file[5:7]
+        day = file[7:9]
+        year = int(year)
+        month = int(month)
+        day = int(day)
+        date = datetime.datetime(year, month, day)
+        dates.append(date)
+    dates = sorted(dates)
+    date_start = dates[0].timestamp()
+    date_end = dates[-1].timestamp()
+    time = np.linspace(date_start, date_end, len(dates))
+    return time
 
 #-------------------------------plot functions-------------------------------
 def plot_geo(number_of_components):
@@ -103,7 +124,7 @@ def time_series_plot(fig:plt.figure, axs:plt.axes, time:np.ndarray, time_series:
     time = [datetime.datetime.fromtimestamp(t) for t in time]
     for i in range(time_series.shape[0]):
         axs[i].scatter(time, time_series[i], s=1)
-        axs[i].set_xticks([time[i] for i in range(len(time)) if i%(len(time)/10)==0])
+        axs[i].set_xticks([time[i] for i in range(len(time)) if i%10000==0])
         axs[i].set_xticklabels(axs[i].get_xticklabels(), rotation=45)
     fig.suptitle(title)
     fig.tight_layout()
@@ -305,6 +326,8 @@ def main()->None:
     number_of_components = 9
     plot_size = plot_geo(number_of_components)
 
+    time = time_from_gps_files()
+
     #-------------dataset-------------
     if rebuild_master_data:
         build_large_dataset(title="raw_northern_tec", extract_northern=True, small_data=False)
@@ -327,19 +350,14 @@ def main()->None:
         tec_md = center_midday(tec)
         tec_md = subtract_mean(tec_md)
         np.save("/data/nonie/masterdata" + file_seperator + "tec_midday.npy", tec_md)
-
-    print("loading data")
-    tec_md = np.load("/data/nonie/masterdata" + file_seperator + "tec_midday.npy")
-    tec_raw = np.load("/data/nonie/masterdata" + file_seperator + "raw_northern_tec.npy")
-    tec_int = np.load("/data/nonie/masterdata" + file_seperator + "interpolated_tec.npy")
-
-    # construct time. Based on known time period. Should be updated with new data
-    time_start = datetime.datetime(year=2026, month=1, day=3, hour=0, minute=0, second=0).timestamp()
-    time_end = time_start +  tec_md.shape[2] * 60 * 5 # 5 minute interval
-    time = np.linspace(time_start, time_end, tec_md.shape[2])
-
-    #-------------find components-------------
+    
     if do_pca:
+        print("loading data")
+        tec_md = np.load("/data/nonie/masterdata" + file_seperator + "tec_midday.npy")
+        tec_raw = np.load("/data/nonie/masterdata" + file_seperator + "raw_northern_tec.npy")
+        tec_int = np.load("/data/nonie/masterdata" + file_seperator + "interpolated_tec.npy")
+
+        # find components
         print("performing PCA")    
         tec_md_components, _ = find_principal_components(tec_md, number_of_components)
         tec_int_components, _ = find_principal_components(tec_int, number_of_components)
@@ -349,14 +367,33 @@ def main()->None:
         check_orthonomality(tec_md_components)
         check_orthonomality(tec_int_components)
 
-
-    if do_pca:    
+        # save components
+        np.save("/data/nonie/masterdata/components_midday.npy", tec_md_components)
+        np.save("/data/nonie/masterdata/components_geographic.npy", tec_int_components)
+        
         print("Finding time series")    
         # pick out last five days
         tec_md_short = tec_md[:, :, -n_days:]
         tec_int_short = tec_int[:, :, -n_days:]
         time_coefficients_md = compute_time_coefficients(tec_md_components, tec_md_short)
         time_coefficients_int = compute_time_coefficients(tec_int_components, tec_int_short)
+
+        # save timeseries
+        np.save("/data/nonie/masterdata/time_series_midday.npy", time_coefficients_md)
+        np.save("/data/nonie/masterdata/time_series_geographic.npy", time_coefficients_int)
+
+
+    if not do_pca:
+        time_coefficients_md = np.load("/data/nonie/masterdata/time_series_midday.npy")
+        time_coefficients_int = np.load("/data/nonie/masterdata/time_series_geographic.npy")
+        tec_md_components = np.load("/data/nonie/masterdata/components_midday.npy")
+        tec_int_components = np.load("/data/nonie/masterdata/components_geographic.npy")
+
+
+    # # construct time. Based on known time period. Should be updated with new data
+    # time_start = datetime.datetime(year=2026, month=1, day=3, hour=0, minute=0, second=0).timestamp()
+    # time_end = time_start +  tec_md.shape[2] * 60 * 5 # 5 minute interval
+    # time = np.linspace(time_start, time_end, tec_md.shape[2])
 
     #-------------plot components-------------
     if plot_principal_components:
