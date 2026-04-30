@@ -49,6 +49,8 @@ def time_from_gps_files()->np.ndarray:
     min_per_day = 60*24
     n_5_min_per_day = min_per_day//5
     time = np.linspace(date_start, date_end, len(dates)*n_5_min_per_day)
+    print(f"{date_start = }")
+    print(f"{date_end = }")
     return time
 
 #-------------------------------plot functions-------------------------------
