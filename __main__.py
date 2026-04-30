@@ -38,7 +38,7 @@ def time_from_gps_files()->np.ndarray:
         year = file[3:5]
         month = file[5:7]
         day = file[7:9]
-        year = int(year)
+        year = int(year) + 2000
         month = int(month)
         day = int(day)
         date = datetime.datetime(year, month, day)
@@ -52,6 +52,7 @@ def time_from_gps_files()->np.ndarray:
     print(f"{dates[0] = }{date_start = }")
     print(f"{dates[-1] = }{date_end = }")
     return time
+
 
 #-------------------------------plot functions-------------------------------
 def plot_geo(number_of_components):
