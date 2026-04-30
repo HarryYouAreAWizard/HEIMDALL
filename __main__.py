@@ -313,9 +313,9 @@ def main()->None:
     # flags
     refind_centers = 0
     rebuild_master_data = 1
-    reinterpolate = 1
-    rebuild_sets = 1
-    do_pca = 1
+    reinterpolate = 0
+    rebuild_sets = 0
+    do_pca = 0
     plot_principal_components = 1
     plot_time_series = 1
     plot_both = 1
