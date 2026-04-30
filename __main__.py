@@ -458,6 +458,11 @@ def main()->None:
 
     #-------------animation-------------
     if animate:
+        print("loading data")
+        tec_md = np.load("/data/nonie/masterdata" + file_seperator + "tec_midday.npy")
+        tec_raw = np.load("/data/nonie/masterdata" + file_seperator + "raw_northern_tec.npy")
+        tec_int = np.load("/data/nonie/masterdata" + file_seperator + "interpolated_tec.npy")
+
         print("animating")
         length_idx = 1000
         tec_md = tec_md[:, :, :length_idx]
