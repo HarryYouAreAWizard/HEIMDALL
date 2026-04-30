@@ -120,8 +120,11 @@ def plot_components_polar(fig: plt.Figure, axs: np.ndarray, tec_components: np.n
     fig.savefig(f"figures" + file_seperator + "{title}.png", dpi=150)
 
 def time_series_plot(fig:plt.figure, axs:plt.axes, time:np.ndarray, time_series:np.ndarray, title:str)->None:
+    print(f"{time.shape = }")
+    print(f"{time_series.shape = }")
     axs = axs.flatten()
     time = [datetime.datetime.fromtimestamp(t) for t in time]
+
     for i in range(time_series.shape[0]):
         axs[i].scatter(time, time_series[i], s=1)
         axs[i].set_xticks([time[i] for i in range(len(time)) if i%10000==0])
