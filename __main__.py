@@ -106,16 +106,16 @@ def plot_components_polar(fig: plt.Figure, axs: np.ndarray, tec_components: np.n
         data = tec_components[:, :, i]  
         mappable = ax.pcolormesh(THETA, RADIUS, data, norm=norm, cmap='viridis')
 
-        ax.set_theta_zero_location('N')
-        ax.set_theta_direction(1)  # or -1 if you prefer clockwise
-
         # Replace degree labels with local-time style labels
         if geo_labels:
+            ax.set_theta_zero_location('N')
             tick_angles_deg = [90, 180, 270]
             tick_labels = ["dawn", "midday", "dusk"]
             ax.set_xticks(np.deg2rad(tick_angles_deg))
             ax.set_xticklabels(tick_labels)
-
+        else:
+            ax.set_theta_zero_location('S')
+        ax.set_theta_direction(1) # or -1 if you prefer clockwise
         ax.set_ylim(0, nlat)
         ax.set_title(f"Component number {i}")
         fig.colorbar(mappable, ax=ax, shrink=0.8, label="TEC magnitude", pad=0.1)
