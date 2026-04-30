@@ -199,6 +199,7 @@ def make_polar_animation(tec, time, title, save=False, geo_labels=False):
     # ax.set_aspect(360/30)
     
     def update(i):
+        i *= 50
         # if not i%50 == 0:
             # return
         # pcolormesh stores values as a flattened array
@@ -327,7 +328,7 @@ def main()->None:
     plot_principal_components = 1
     plot_time_series = 1
     plot_both = 1
-    animate = 0
+    animate = 1
     extract_18UTC_images = 0
 
     n_days = 15 * (24*60)//5 # for time series plot
@@ -464,13 +465,13 @@ def main()->None:
         tec_int = tec_int[:, :, :length_idx]
         
         # make_polar_viewer(tec_raw, time, "midday centered")
-        anim = make_polar_animation(tec_md, time, title="Midday centered", save=False, geo_labels=True)
+        anim = make_polar_animation(tec_md, time, title="Midday centered", save=True, geo_labels=True)
         anim.save("figures" + file_seperator + "gifs" + file_seperator + "Midday centered.gif", writer="pillow")
         del tec_md; del anim
-        anim = make_polar_animation(tec_raw, time, title="Raw TEC", save=False)
+        anim = make_polar_animation(tec_raw, time, title="Raw TEC", save=True)
         anim.save("figures" + file_seperator + "gifs" + file_seperator + "Raw.gif", writer="pillow")
         del tec_raw; del anim
-        anim = make_polar_animation(tec_int, time, title="Interpolated centered", save=False)
+        anim = make_polar_animation(tec_int, time, title="Interpolated centered", save=True)
         anim.save("figures" + file_seperator + "gifs" + file_seperator + "Interpolated.gif", writer="pillow")
         del tec_int; del anim
         # show()
