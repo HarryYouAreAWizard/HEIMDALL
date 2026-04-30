@@ -382,10 +382,14 @@ def main()->None:
         tec_int_short = tec_int[:, :, -n_days:]
         time_coefficients_md = compute_time_coefficients(tec_md_components, tec_md)
         time_coefficients_int = compute_time_coefficients(tec_int_components, tec_int)
-
-        # save timeseries
+        
+        # save time series
         np.save("/data/nonie/masterdata/time_series_midday.npy", time_coefficients_md)
         np.save("/data/nonie/masterdata/time_series_geographic.npy", time_coefficients_int)
+        # save for external data analysis
+        np.save("/time_series/time_series_midday.npy", time_coefficients_md)
+        np.save("time_series/time.npy", time)
+
 
 
     if not do_pca:
