@@ -320,7 +320,7 @@ def main()->None:
     rebuild_master_data = 0
     reinterpolate = 0
     rebuild_sets = 0
-    do_pca = 0
+    do_pca = 1
     plot_principal_components = 0
     plot_time_series = 0
     plot_both = 1
@@ -380,8 +380,8 @@ def main()->None:
         # pick out last five days
         tec_md_short = tec_md[:, :, -n_days:]
         tec_int_short = tec_int[:, :, -n_days:]
-        time_coefficients_md = compute_time_coefficients(tec_md_components, tec_md_short)
-        time_coefficients_int = compute_time_coefficients(tec_int_components, tec_int_short)
+        time_coefficients_md = compute_time_coefficients(tec_md_components, tec_md)
+        time_coefficients_int = compute_time_coefficients(tec_int_components, tec_int)
 
         # save timeseries
         np.save("/data/nonie/masterdata/time_series_midday.npy", time_coefficients_md)
