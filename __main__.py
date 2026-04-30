@@ -332,6 +332,7 @@ def main()->None:
     plot_size = plot_geo(number_of_components)
 
     time = time_from_gps_files()
+    np.save("time_series/time.npy", time) # for external analysis
 
     #-------------dataset-------------
     if rebuild_master_data:
@@ -388,7 +389,6 @@ def main()->None:
         np.save("/data/nonie/masterdata/time_series_geographic.npy", time_coefficients_int)
         # save for external data analysis
         np.save("/time_series/time_series_midday.npy", time_coefficients_md)
-        np.save("time_series/time.npy", time)
 
 
 
