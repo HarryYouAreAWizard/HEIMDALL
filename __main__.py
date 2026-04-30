@@ -390,10 +390,11 @@ def main()->None:
         # save time series
         np.save("/data/nonie/masterdata/time_series_midday.npy", time_coefficients_md)
         np.save("/data/nonie/masterdata/time_series_geographic.npy", time_coefficients_int)
+
         # save for external data analysis
         np.save("/time_series/time_series_midday.npy", time_coefficients_md)
-
-
+        np.save("components/components_midday.npy", tec_md_components)
+        np.save("components/components_geographic.npy", tec_int_components)
 
     if not do_pca:
         print("loading components and time series...")
@@ -405,6 +406,13 @@ def main()->None:
         print(f"{time_coefficients_int.shape = }")
         print(f"{tec_md_components.shape = }")
         print(f"{tec_int_components.shape = }")
+
+        # save for external data analysis
+        np.save("/time_series/time_series_midday.npy", time_coefficients_md)
+        np.save("/components/components_midday.npy", tec_md_components)
+        np.save("/components/components_geographic.npy", tec_int_components)
+
+
 
     # # construct time. Based on known time period. Should be updated with new data
     # time_start = datetime.datetime(year=2026, month=1, day=3, hour=0, minute=0, second=0).timestamp()
