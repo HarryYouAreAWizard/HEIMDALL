@@ -76,7 +76,7 @@ def build_large_dataset(title="non_shifted_tec_", extract_northern=False, small_
     np.save(f"/data/nonie/masterdata/{title}", master_dataset)
 
 #----------------------interpolation----------------------
-def interpolate_tec(data:array)->array:
+def interpolate_tec(data:array)->np.ndarray:
     """
     Spatial interpolation of tec images
     
