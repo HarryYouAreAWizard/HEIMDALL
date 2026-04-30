@@ -409,8 +409,8 @@ def main()->None:
 
         # save for external data analysis
         np.save("time_series/time_series_midday.npy", time_coefficients_md)
-        np.save("/components/components_midday.npy", tec_md_components)
-        np.save("/components/components_geographic.npy", tec_int_components)
+        np.save("components/components_midday.npy", tec_md_components)
+        np.save("components/components_geographic.npy", tec_int_components)
 
 
 
