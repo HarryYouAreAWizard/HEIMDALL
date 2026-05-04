@@ -324,11 +324,11 @@ def main()->None:
     rebuild_master_data = 0
     reinterpolate = 0
     rebuild_sets = 0
-    do_pca = 1
+    do_pca = 0
     plot_principal_components = 1
     plot_time_series = 1
     plot_both = 1
-    animate = 1
+    animate = 0
     extract_18UTC_images = 0
     make_single_day_global_animation = 0
 
@@ -448,7 +448,7 @@ def main()->None:
 
     if plot_both:
         print(f"plotting overviews")
-        n_rows = 4
+        n_rows = 6
         fig_md, axs_md = subplots(2, n_rows, figsize=(15, 15))
         fig_int, axs_int = subplots(2, n_rows, figsize=(15, 15))
         component_and_timeseries_plot(fig_md, axs_md,   tec_md_components[:, :, :n_rows],  time[-n_days:], time_coefficients_md[:n_rows,  -n_days:], title="Midday", geo_labels=True)
