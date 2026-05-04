@@ -487,7 +487,7 @@ def main()->None:
         extract_image_at_18UTC(tec_md, time)
 
     from TEC.TEC import load_naive as load_single
-    tec_campaing_day = load_single("/data/nonie/tec_data/gps260202.002.hdf5", time_format="unix")
+    tec_campaing_day = load_single("/data/nonie/tec_data/gps260202g.002.hdf5", time_format="unix")
     print(f"{tec_campaing_day['tec'].shape = }")
 if __name__ == "__main__":
     main()
