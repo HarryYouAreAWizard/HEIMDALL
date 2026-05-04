@@ -203,13 +203,13 @@ def make_polar_animation(tec, time, title, save=False, geo_labels=False):
         # if not i%50 == 0:
             # return
         # pcolormesh stores values as a flattened array
-        mappable.set_array(tec[:, :, i*10].ravel())
-        ts = time[i*10]
+        mappable.set_array(tec[:, :, i*2].ravel())
+        ts = time[i*2]
         DT = datetime.datetime.fromtimestamp(ts)
         fig.suptitle(f"{DT.day}/{DT.month}-{DT.year}, {DT.hour}:{DT.minute}")
-        print(f"animating:   {i} / {tec.shape[2]//10}     ", end="\r")
+        print(f"animating:   {i} / {tec.shape[2]//2}     ", end="\r")
 
-    anim = animation.FuncAnimation(fig, update, tec.shape[2]//10, interval=1)
+    anim = animation.FuncAnimation(fig, update, tec.shape[2]//2, interval=1)
 
     if save: 
         anim.save("figures" + file_seperator + "month_animation.gif", writer="pillow", fps=60)
@@ -328,8 +328,9 @@ def main()->None:
     plot_principal_components = 0
     plot_time_series = 0
     plot_both = 0
-    animate = 0
+    animate = 1
     extract_18UTC_images = 0
+    make_single_day_global_animation = 0
 
     n_days = 15 * (24*60)//5 # for time series plot
     number_of_components = 9
@@ -486,18 +487,19 @@ def main()->None:
         tec_md = np.load("/data/nonie/masterdata" + file_seperator + "tec_midday.npy")
         extract_image_at_18UTC(tec_md, time)
 
-    from TEC.TEC import load_naive as load_single
-    from matplotlib.animation import FuncAnimation
-    tec_campaing_day = load_single("/data/nonie/tec_data/gps260202g.002.hdf5", time_format="unix")
-    print(f"{tec_campaing_day['tec'].shape = }")
-    fig, ax=plt.subplots()
-    im = ax.imshow(tec_campaing_day["tec"][:, :, 0])
-    def update(frame):
-        im.set_data(tec_campaing_day["tec"][:, :, frame])
-        DT = datetime.datetime.fromtimestamp(tec_campaing_day["time"][frame])
-        plt.title(f"{DT.day}/{DT.month}-{DT.year}, {DT.hour}:{DT.minute}")
-    anim = FuncAnimation(fig, update, frames=tec_campaing_day["tec"].shape[2], interval=100)
-    anim.save("figures" + file_seperator + "gifs" + file_seperator + "Single_day.gif", writer="pillow", fps=10)
+    if make_single_day_global_animation:
+        from TEC.TEC import load_naive as load_single
+        from matplotlib.animation import FuncAnimation
+        tec_campaing_day = load_single("/data/nonie/tec_data/gps260202g.002.hdf5", time_format="unix")
+        print(f"{tec_campaing_day['tec'].shape = }")
+        fig, ax=plt.subplots()
+        im = ax.imshow(tec_campaing_day["tec"][:, :, 0])
+        def update(frame):
+            im.set_data(tec_campaing_day["tec"][:, :, frame])
+            DT = datetime.datetime.fromtimestamp(tec_campaing_day["time"][frame])
+            plt.title(f"{DT.day}/{DT.month}-{DT.year}, {DT.hour}:{DT.minute}")
+        anim = FuncAnimation(fig, update, frames=tec_campaing_day["tec"].shape[2], interval=100)
+        anim.save("figures" + file_seperator + "gifs" + file_seperator + "Single_day.gif", writer="pillow", fps=10)
     
 
 if __name__ == "__main__":
