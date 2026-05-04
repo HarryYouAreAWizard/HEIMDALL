@@ -133,8 +133,14 @@ def time_series_plot(fig:plt.figure, axs:plt.axes, time:np.ndarray, time_series:
 
     for i in range(time_series.shape[0]):
         axs[i].scatter(time, time_series[i], s=1)
-        axs[i].set_xticks([time[i] for i in range(len(time)) if i%1000==0])
-        axs[i].set_xticklabels(axs[i].get_xticklabels(), rotation=45)
+        
+        # if len(time) == 208800:
+        #     axs[i].set_xticks([time[i] for i in range(len(time)) if i%==0])
+        # else:            
+        #     axs[i].set_xticks([time[i] for i in range(len(time)) if i%1000==0])
+        # axs[i].set_xticklabels(axs[i].get_xticklabels(), rotation=45)
+
+    axs[i].set_xticks([time[i] for i in range(len(time)) if i%(len(time)//5) == 0])
     fig.suptitle(title)
     fig.tight_layout()
     fig.savefig(f"figures" + file_seperator + "{title}")
