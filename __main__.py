@@ -394,9 +394,15 @@ def main()->None:
         np.save("/data/nonie/masterdata/time_series_geographic.npy", time_coefficients_int)
 
         # save for external data analysis
+<<<<<<< HEAD
+        np.save("/home/nonie/HEIMDALL/HEIMDALL/time_series/time_series_midday.npy", time_coefficients_md)
+        np.save("/home/nonie/HEIMDALL/HEIMDALL/components/components_midday.npy", tec_md_components)
+        np.save("/home/nonie/HEIMDALL/HEIMDALL/components/components_geographic.npy", tec_int_components)
+=======
         np.save("home/nonie/HEIMDALL/HEIMDALL/time_series/time_series_midday.npy", time_coefficients_md)
         np.save("home/nonie/HEIMDALL/HEIMDALL/components/components_midday.npy", tec_md_components)
         np.save("home/nonie/HEIMDALL/HEIMDALL/components/components_geographic.npy", tec_int_components)
+>>>>>>> 750b764fa29bc066346de6e60c8e28210d377742
 
     if not do_pca:
         print("loading components and time series...")
