@@ -22,6 +22,7 @@ from principal_component_analysis import (
 from dataset_handler import build_large_dataset, interpolate_tec
 from centering import get_peaks, center_concomic, center_midday, center_midnight
 
+
 # changes depending on system
 # file_seperator = "\\"
 file_seperator = "/"
@@ -324,10 +325,10 @@ def main()->None:
     reinterpolate = 0
     rebuild_sets = 0
     do_pca = 0
-    plot_principal_components = 1
-    plot_time_series = 1
-    plot_both = 1
-    animate = 1
+    plot_principal_components = 0
+    plot_time_series = 0
+    plot_both = 0
+    animate = 0
     extract_18UTC_images = 0
 
     n_days = 15 * (24*60)//5 # for time series plot
@@ -485,5 +486,8 @@ def main()->None:
         tec_md = np.load("/data/nonie/masterdata" + file_seperator + "tec_midday.npy")
         extract_image_at_18UTC(tec_md, time)
 
+    from TEC.TEC import load_naive as load_single
+    tec_campaing_day = load_single("/data/nonie/tec_data/gps260202.002.hdf5", time_format="unix")
+    print(f"{tec_campaing_day['tec'].shape = }")
 if __name__ == "__main__":
     main()
