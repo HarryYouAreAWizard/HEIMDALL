@@ -338,7 +338,7 @@ def main()->None:
     extract_18UTC_images = 0
     make_single_day_global_animation = 0
 
-    n_days = 15 * (24*60)//5 # for time series plot
+    n_days = 5 * (24*60)//5 # for time series plot
     number_of_components = 9
     plot_size = plot_geo(number_of_components)
 
