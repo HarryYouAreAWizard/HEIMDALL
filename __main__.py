@@ -330,7 +330,7 @@ def main()->None:
     rebuild_master_data = 0
     reinterpolate = 0
     rebuild_sets = 0
-    do_pca = 1
+    do_pca = 0
     plot_principal_components = 1
     plot_time_series = 1
     plot_both = 1
