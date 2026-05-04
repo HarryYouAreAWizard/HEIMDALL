@@ -437,13 +437,13 @@ def main()->None:
     if plot_time_series:
         print(f"Plotting time series...")
         fig_md, axs_md=subplots(number_of_components//plot_size, plot_size, figsize=(10, 10))
-        time_series_plot(fig_md, axs_md, time[-n_days:],
-                         time_coefficients_md[:, -n_days:], title="Coefficients, Northern Midday Components")
+        time_series_plot(fig_md, axs_md, time[:],
+                         time_coefficients_md[:, :], title="Coefficients, Northern Midday Components")
         fig_md.savefig("figures/Coefficients, Northern Midday Components.png")
 
         fig_int, axs_int=subplots(number_of_components//plot_size, plot_size, figsize=(10, 10))
-        time_series_plot(fig_int, axs_int, time[-n_days:], 
-                         time_coefficients_int[:, -n_days:], title="Coefficients, Nothern Geographic Components")
+        time_series_plot(fig_int, axs_int, time[:], 
+                         time_coefficients_int[:, :], title="Coefficients, Nothern Geographic Components")
         fig_int.savefig("figures/Coefficients, Northern Geographic Components.png")
 
     if plot_both:
