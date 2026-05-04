@@ -465,8 +465,8 @@ def main()->None:
         tec_int = np.load("/data/nonie/masterdata" + file_seperator + "interpolated_tec.npy")
 
         print("animating")
-        length_idx = 1000
-        starting_point = -10500
+        length_idx = 2500
+        starting_point = -5000
         tec_md =   tec_md[:, :, starting_point:starting_point + length_idx]
         tec_raw = tec_raw[:, :, starting_point:starting_point + length_idx]
         tec_int = tec_int[:, :, starting_point:starting_point + length_idx]
