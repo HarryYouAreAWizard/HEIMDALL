@@ -59,13 +59,9 @@ def find_principal_components(tec: np.ndarray, number_of_components: int)->np.nd
 
 def subtract_mean(tec:np.ndarray)->np.ndarray:
     mean = np.mean(tec, axis=2)
-    # fig, ax=subplots()
-    # ax.imshow(mean, cmap="grey")
-    # show()
-    # plt.close()
+
     for i in range(tec.shape[2]):
         tec[:, :, i] -=  mean
-    # tec = np.transpose(tec, axes=(1, 2, 0))
     return tec
 
 

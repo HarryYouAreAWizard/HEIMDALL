@@ -330,7 +330,7 @@ def main()->None:
     rebuild_master_data = 0
     reinterpolate = 0
     rebuild_sets = 0
-    do_pca = 0
+    do_pca = 1
     plot_principal_components = 1
     plot_time_series = 1
     plot_both = 1
@@ -365,7 +365,7 @@ def main()->None:
         print("centering")
         # do each set seperately, otherwise it gets too memory intense
         tec_md = center_midday(tec)
-        tec_md = subtract_mean(tec_md)
+        # tec_md = subtract_mean(tec_md)
         np.save("/data/nonie/masterdata" + file_seperator + "tec_midday.npy", tec_md)
     
     if do_pca:
