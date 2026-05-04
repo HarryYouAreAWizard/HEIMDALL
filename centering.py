@@ -9,10 +9,14 @@ def center_midday(tec: np.ndarray) -> np.ndarray:
     """Shift the TEC images uniformly, only according to the time of day"""
     rolled_tec = zeros(tec.shape)
     for temporal_index in range(tec.shape[2]):
+        # define the number of indicies to roll
         number_of_indicies_to_roll = int(tec.shape[1]/288 * temporal_index)
-        if number_of_indicies_to_roll == 360: number_of_indicies_to_roll = 0
+        if number_of_indicies_to_roll == 360: 
+            number_of_indicies_to_roll = 0
+
+        # roll along longitude
         rolled_tec[:, :, temporal_index] = roll(tec[:, :, temporal_index], number_of_indicies_to_roll, axis=1)
-    rolled_tec = roll(rolled_tec, 180, axis=1) # try to get peak in center
+    rolled_tec = roll(rolled_tec, 180, axis=1) # get peak in center
     return rolled_tec
 
 def center_midnight(tec: np.ndarray) -> np.ndarray:

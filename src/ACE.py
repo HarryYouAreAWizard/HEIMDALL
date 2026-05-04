@@ -102,33 +102,6 @@ def load_MFI(path, time_format):
         "Bz":array(B_z)
     }
 
-# (
-#     timestamps,
-#     B_magnitude,
-#     B_x,
-#     B_y,
-#     B_z
-# ) = load_MFI(MFI_path)
-
-
-
-# fig, axs=subplots(2, 2)
-# for ax, variable, title in zip(
-#     axs.flatten(), 
-#     [B_magnitude, B_x, B_y, B_z],
-#     [r"$|B|$", r"$B_x$", r"$B_y$", r"$B_z$"]
-# ):
-#     times = np.linspace(-60*2, 60*6, len(variable))
-#     ax.plot(times, variable)
-#     ax.set_title(title)
-#     # ax.set_xticks([e for i, e in enumerate(timestamps) if i%len(timestamps) == 0])
-
-# fig.supylabel("Magnetic field [nT]")
-# fig.supxlabel("Time since start of experiement [min]")
-# fig.tight_layout()
-# fig.savefig("figures\\ACE\\mag field.png")
-
-
 
 def load_SWE(path, time_format):
     doc = open(path, mode="r")
@@ -169,24 +142,3 @@ def load_SWE(path, time_format):
         "number density":array(number_density),
         "bulk speed":array(bulk_speed)
     }
-
-# (
-#     timestamps,
-#     number_density,
-#     bulk_speed
-# ) = load_SWE(SWE_path)
-
-# fig, axs=subplots(2, 1)
-# for ax, variable, title in zip(
-#     axs, 
-#     [number_density, bulk_speed], 
-#     [r"number density [$\text{cm}^{-3}$]", r"bulk speed [$\frac{\text{km}}{\text{s}}$]"]
-# ):
-#     times = np.linspace(-60*2, 60*6, len(variable))
-#     ax.plot(times, variable)
-#     ax.set_ylabel(title)
-#     # ax.set_xticks([e for i, e in enumerate(timestamps) if i%len(timestamps) == 0])
-# fig.supxlabel("Time since start of experiement [min]")
-# fig.suptitle("ACE density and speed")
-# fig.tight_layout()
-# fig.savefig("figures\\ACE\\density and speed.png")
