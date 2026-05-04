@@ -27,7 +27,7 @@ from centering import get_peaks, center_concomic, center_midday, center_midnight
 # file_seperator = "\\"
 file_seperator = "/"
 figurefolder = "figures" + file_seperator
-datafolder = "..\data"
+# datafolder = "..\data"
 datafolder = "/data/nonie/"
 
 

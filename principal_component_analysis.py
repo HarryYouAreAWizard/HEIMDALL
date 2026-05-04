@@ -33,12 +33,9 @@ def find_principal_components(tec: np.ndarray, number_of_components: int)->np.nd
     # weight by latitude
     tec = weight_by_latitude(tec)
 
-
     # reshape to 2D array of shape (time, lat*lon)
-    # time, latxlon
-    tec_columns = tec.reshape((-1, tec.shape[2]))
-    # latxlon, time
-    tec_columns = tec_columns.T
+    tec_columns = tec.reshape((-1, tec.shape[2])) # (lat*lon, time)
+    tec_columns = tec_columns.T                   # (time, lat*lon)
  
     # initialize PCA
     ipca = IncrementalPCA(
@@ -48,11 +45,6 @@ def find_principal_components(tec: np.ndarray, number_of_components: int)->np.nd
     )
     # fit on data
     ipca.fit(tec_columns)
-
-    # Transform data
-    # X_transformed = ipca.transform(tec_columns)
-    # Reconstruct data
-    # X_reconstructed = ipca.inverse_transform(X_transformed)
 
     # Get principal components
     components = ipca.components_  # shape: (n_components, n_features)
