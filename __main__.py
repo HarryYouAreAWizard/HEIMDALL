@@ -324,10 +324,10 @@ def main()->None:
     rebuild_master_data = 0
     reinterpolate = 0
     rebuild_sets = 0
-    do_pca = 0
-    plot_principal_components = 0
-    plot_time_series = 0
-    plot_both = 0
+    do_pca = 1
+    plot_principal_components = 1
+    plot_time_series = 1
+    plot_both = 1
     animate = 1
     extract_18UTC_images = 0
     make_single_day_global_animation = 0
@@ -465,7 +465,7 @@ def main()->None:
         tec_int = np.load("/data/nonie/masterdata" + file_seperator + "interpolated_tec.npy")
 
         print("animating")
-        length_idx = 2500
+        length_idx = 1500
         starting_point = -5000
         tec_md =   tec_md[:, :, starting_point:starting_point + length_idx]
         tec_raw = tec_raw[:, :, starting_point:starting_point + length_idx]

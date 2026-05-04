@@ -12,7 +12,8 @@ def weight_by_latitude(tec: np.ndarray) -> np.ndarray:
     nlon = tec.shape[1]
     ntime = tec.shape[2]
     # Create latitude weight array: sqrt(0), sqrt(1), sqrt(2), ..., sqrt(nlat-1)
-    lats = 90 - np.arange(nlat)
+    # lats = 90 - np.arange(nlat)
+    lats = np.arange(0, nlat, 1)
     lat_weights = np.sqrt(lats)
     # Create weight tensor with same shape as tec
     weight_tensor = np.tile(lat_weights[:, np.newaxis, np.newaxis], (1, nlon, ntime))
