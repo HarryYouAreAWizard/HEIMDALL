@@ -487,7 +487,18 @@ def main()->None:
         extract_image_at_18UTC(tec_md, time)
 
     from TEC.TEC import load_naive as load_single
+    from matplotlib.animation import FuncAnimation
     tec_campaing_day = load_single("/data/nonie/tec_data/gps260202g.002.hdf5", time_format="unix")
     print(f"{tec_campaing_day['tec'].shape = }")
+    fig, ax=plt.subplots()
+    im = ax.imshow(tec_campaing_day["tec"][:, :, 0])
+    def update(frame):
+        im.set_data(tec_campaing_day["tec"][:, :, frame])
+        DT = datetime.datetime.fromtimestamp(tec_campaing_day["time"][frame])
+        plt.title(f"{DT.day}/{DT.month}-{DT.year}, {DT.hour}:{DT.minute}")
+    anim = FuncAnimation(fig, update, frames=tec_campaing_day["tec"].shape[2], interval=100)
+    anim.save("figures" + file_seperator + "gifs" + file_seperator + "Single_day.gif", writer="pillow", fps=10)
+    
+
 if __name__ == "__main__":
     main()
