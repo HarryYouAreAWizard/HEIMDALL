@@ -42,6 +42,7 @@ def latitude_weights(
     nlat: int,
     lat_min: float | None = None,
     lat_max: float | None = None,
+    dtype: np.dtype | type = float,
 ) -> np.ndarray:
     """Return latitude weights used by the TEC PCA routines.
 
@@ -50,15 +51,16 @@ def latitude_weights(
     for backwards compatibility with the existing northern-cap products.
     """
     if lat_min is None or lat_max is None:
-        return np.sqrt(np.arange(0, nlat, 1))
+        return np.sqrt(np.arange(0, nlat, 1, dtype=dtype)).astype(dtype, copy=False)
     latitudes = np.linspace(lat_min, lat_max, nlat)
-    return np.sqrt(np.clip(np.cos(np.deg2rad(latitudes)), 0.0, None))
+    return np.sqrt(np.clip(np.cos(np.deg2rad(latitudes)), 0.0, None)).astype(dtype, copy=False)
 
 
 def weighted_tec_columns(
     tec: np.ndarray,
     lat_min: float | None = None,
     lat_max: float | None = None,
+    spatial_weights: np.ndarray | None = None,
 ) -> tuple[np.ndarray, np.ndarray, tuple[int, int, int]]:
     """Return latitude-weighted TEC columns and an observation mask.
 
@@ -68,7 +70,19 @@ def weighted_tec_columns(
     treated as real zero-valued TEC observations.
     """
     original_shape = tec.shape
-    weights = latitude_weights(original_shape[0], lat_min=lat_min, lat_max=lat_max)[:, np.newaxis, np.newaxis]
+    weight_dtype = np.float32 if tec.dtype == np.float32 else float
+    if spatial_weights is None:
+        weights = latitude_weights(
+            original_shape[0],
+            lat_min=lat_min,
+            lat_max=lat_max,
+            dtype=weight_dtype,
+        )[:, np.newaxis, np.newaxis]
+    else:
+        weights = np.asarray(spatial_weights, dtype=weight_dtype)
+        if weights.shape != original_shape[:2]:
+            raise ValueError(f"spatial_weights shape {weights.shape} does not match TEC grid {original_shape[:2]}")
+        weights = weights[:, :, np.newaxis]
     observed = np.isfinite(tec)
     weighted = np.where(observed, tec, 0.0) * weights
     return (
@@ -314,6 +328,7 @@ def find_sparse_principal_components(
     n_jobs: int = 1,
     lat_min: float | None = None,
     lat_max: float | None = None,
+    spatial_weights: np.ndarray | None = None,
     verbose: bool = True,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Estimate TEC principal components with missing samples weighted to zero.
@@ -328,7 +343,12 @@ def find_sparse_principal_components(
     columns have shape ``(lat*lon, number_of_components)``.
     """
     original_shape = tec.shape
-    columns, observed, _ = weighted_tec_columns(tec, lat_min=lat_min, lat_max=lat_max)
+    columns, observed, _ = weighted_tec_columns(
+        tec,
+        lat_min=lat_min,
+        lat_max=lat_max,
+        spatial_weights=spatial_weights,
+    )
     mean = sparse_feature_mean(columns, observed)
     residual_columns = columns - mean[:, np.newaxis]
     residual_columns[~observed] = 0.0
@@ -470,9 +490,15 @@ def compute_sparse_time_coefficients(
     n_jobs: int = 1,
     lat_min: float | None = None,
     lat_max: float | None = None,
+    spatial_weights: np.ndarray | None = None,
 ) -> np.ndarray:
     """Project sparse TEC data onto components using only observed samples."""
-    columns, observed, _ = weighted_tec_columns(tec, lat_min=lat_min, lat_max=lat_max)
+    columns, observed, _ = weighted_tec_columns(
+        tec,
+        lat_min=lat_min,
+        lat_max=lat_max,
+        spatial_weights=spatial_weights,
+    )
     if len(principal_components.shape) == 3:
         principal_components = np.reshape(
             principal_components,

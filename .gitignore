@@ -7,3 +7,5 @@ misc*/
 __pycache__/
 sparse_results/
 figures/*_viewer.html
+.venv/
+results/
