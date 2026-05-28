@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import multiprocessing as mp
 from pathlib import Path
 
 import h5py
@@ -184,6 +185,100 @@ def map_frame_to_mlt(
     return out.reshape((n_lat, n_lon))
 
 
+_READ_FILES = None
+_READ_SHAPE = None
+_READ_SAMPLES_PER_FILE = None
+_READ_COORDINATE_SYSTEM = None
+_READ_DTYPE = None
+_READ_MLT_MAPPING = None
+
+
+def _init_read_worker(
+    files: list[Path],
+    shape: tuple[int, int],
+    samples_per_file: int,
+    coordinate_system: str,
+    dtype: str,
+    mlt_mapping: tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, list[tuple[dt.datetime, dt.datetime]]] | None,
+) -> None:
+    global _READ_FILES
+    global _READ_SHAPE
+    global _READ_SAMPLES_PER_FILE
+    global _READ_COORDINATE_SYSTEM
+    global _READ_DTYPE
+    global _READ_MLT_MAPPING
+    _READ_FILES = files
+    _READ_SHAPE = shape
+    _READ_SAMPLES_PER_FILE = samples_per_file
+    _READ_COORDINATE_SYSTEM = coordinate_system
+    _READ_DTYPE = dtype
+    _READ_MLT_MAPPING = mlt_mapping
+
+
+def _read_file_group(
+    item: tuple[int, np.ndarray, np.ndarray],
+) -> tuple[np.ndarray, np.ndarray]:
+    file_index, output_indices, global_time_indices = item
+    subcube = np.empty((_READ_SHAPE[0], _READ_SHAPE[1], len(output_indices)), dtype=_READ_DTYPE)
+    with h5py.File(_READ_FILES[int(file_index)], "r") as h5:
+        data = h5["Data/Array Layout/2D Parameters/tec"]
+        for local_output_index, global_time_index in enumerate(global_time_indices):
+            global_time_index = int(global_time_index)
+            time_index = global_time_index % _READ_SAMPLES_PER_FILE
+            frame = np.asarray(data[:, :, time_index])
+            if _READ_COORDINATE_SYSTEM == "local_time":
+                frame = np.roll(frame, local_time_roll(_READ_SHAPE[1], _READ_SAMPLES_PER_FILE, global_time_index), axis=1)
+            elif _READ_COORDINATE_SYSTEM == "mlt":
+                if _READ_MLT_MAPPING is None:
+                    raise ValueError("MLT coordinate system needs an MLT mapping")
+                qd_lon, lat_bin, mapping_valid, _, file_bounds = _READ_MLT_MAPPING
+                frame = map_frame_to_mlt(
+                    frame,
+                    qd_lon,
+                    lat_bin,
+                    mapping_valid,
+                    frame_datetime(file_bounds, global_time_index, _READ_SAMPLES_PER_FILE),
+                )
+            subcube[:, :, local_output_index] = frame
+    return output_indices, subcube
+
+
+def read_frame_cube_parallel(
+    files: list[Path],
+    indices: np.ndarray,
+    shape: tuple[int, int],
+    samples_per_file: int,
+    coordinate_system: str,
+    dtype: str,
+    jobs: int,
+    mlt_mapping: tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, list[tuple[dt.datetime, dt.datetime]]] | None = None,
+) -> np.ndarray:
+    cube = np.empty((shape[0], shape[1], len(indices)), dtype=dtype)
+    file_indices = indices // samples_per_file
+    tasks = []
+    for file_index in np.unique(file_indices):
+        output_indices = np.flatnonzero(file_indices == file_index)
+        tasks.append((int(file_index), output_indices, indices[output_indices]))
+    if jobs <= 1 or len(tasks) <= 1:
+        _init_read_worker(files, shape, samples_per_file, coordinate_system, dtype, mlt_mapping)
+        for task_index, task in enumerate(tasks):
+            print(f"loading file group {task_index + 1}/{len(tasks)}", flush=True)
+            output_indices, subcube = _read_file_group(task)
+            cube[:, :, output_indices] = subcube
+        return cube
+
+    n_processes = min(jobs, len(tasks))
+    with mp.get_context("fork").Pool(
+        processes=n_processes,
+        initializer=_init_read_worker,
+        initargs=(files, shape, samples_per_file, coordinate_system, dtype, mlt_mapping),
+    ) as pool:
+        for task_index, (output_indices, subcube) in enumerate(pool.imap_unordered(_read_file_group, tasks), start=1):
+            print(f"loaded file group {task_index}/{len(tasks)}", flush=True)
+            cube[:, :, output_indices] = subcube
+    return cube
+
+
 def read_frame_cube(
     files: list[Path],
     indices: np.ndarray,
@@ -192,7 +287,19 @@ def read_frame_cube(
     coordinate_system: str,
     dtype: str,
     mlt_mapping: tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, list[tuple[dt.datetime, dt.datetime]]] | None = None,
+    jobs: int = 1,
 ) -> np.ndarray:
+    if jobs > 1:
+        return read_frame_cube_parallel(
+            files,
+            indices,
+            shape,
+            samples_per_file,
+            coordinate_system,
+            dtype,
+            jobs,
+            mlt_mapping=mlt_mapping,
+        )
     cube = np.empty((shape[0], shape[1], len(indices)), dtype=dtype)
     file_indices = indices // samples_per_file
     for file_index in np.unique(file_indices):
@@ -239,6 +346,7 @@ def project_all_times(
     dtype: str,
     mlt_mapping: tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, list[tuple[dt.datetime, dt.datetime]]] | None = None,
     coverage_path: Path | None = None,
+    read_jobs: int = 1,
 ) -> None:
     coefficients = np.lib.format.open_memmap(
         output_path,
@@ -259,6 +367,7 @@ def project_all_times(
             coordinate_system=coordinate_system,
             dtype=dtype,
             mlt_mapping=mlt_mapping,
+            jobs=read_jobs,
         )
         if coverage is not None:
             coverage += np.isfinite(chunk).sum(axis=2, dtype=np.uint32)
@@ -305,6 +414,7 @@ def main() -> None:
         coordinate_system=coordinate_system,
         dtype=args.dtype,
         mlt_mapping=mlt_mapping,
+        jobs=args.jobs,
     )
     training_coverage = np.isfinite(training_cube).sum(axis=2, dtype=np.uint32)
     np.save(output_dir / f"training_observed_count_global_sparse_{coordinate_system}.npy", training_coverage)
@@ -355,6 +465,7 @@ def main() -> None:
         dtype=args.dtype,
         mlt_mapping=mlt_mapping,
         coverage_path=output_dir / f"observed_count_global_sparse_{coordinate_system}.npy",
+        read_jobs=args.jobs,
     )
     print("done")
 
