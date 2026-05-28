@@ -42,6 +42,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--components", type=int, default=9, help="Number of principal components.")
     parser.add_argument("--iterations", type=int, default=8, help="Alternating least-squares iterations.")
     parser.add_argument("--jobs", type=int, default=1, help="Worker processes for sparse ALS solves.")
+    parser.add_argument(
+        "--lat-min",
+        type=float,
+        default=None,
+        help="Minimum latitude of the input grid. Enables sqrt(cos(latitude)) weighting.",
+    )
+    parser.add_argument(
+        "--lat-max",
+        type=float,
+        default=None,
+        help="Maximum latitude of the input grid. Enables sqrt(cos(latitude)) weighting.",
+    )
     parser.add_argument("--ridge", type=float, default=1e-6, help="Small ridge term for weighted least squares.")
     parser.add_argument(
         "--sample-columns",
@@ -79,6 +91,8 @@ def main() -> None:
         sample_columns=args.sample_columns,
         random_state=args.random_state,
         n_jobs=args.jobs,
+        lat_min=args.lat_min,
+        lat_max=args.lat_max,
         verbose=True,
     )
 
@@ -91,6 +105,8 @@ def main() -> None:
         mean=mean,
         ridge=args.ridge,
         n_jobs=args.jobs,
+        lat_min=args.lat_min,
+        lat_max=args.lat_max,
     )
 
     for path, array in [
