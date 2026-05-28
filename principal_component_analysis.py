@@ -1,5 +1,15 @@
 
 
+
+"""
+Principal Component Analysis (PCA) implementation for TEC data. 
+This module includes both an incremental PCA implementation using scikit-learn's IncrementalPCA, as well as a personal 
+implementation of PCA using numpy. 
+
+The incremental PCA is designed to handle large datasets that may not fit into memory, 
+while the personal implementation is a more traditional approach to PCA.
+
+"""
 import numpy as np
 from incremental_pca_torch import IncrementalPCA
 
@@ -11,6 +21,7 @@ def weight_by_latitude(tec: np.ndarray) -> np.ndarray:
     nlat = tec.shape[0]
     nlon = tec.shape[1]
     ntime = tec.shape[2]
+    
     # Create latitude weight array: sqrt(0), sqrt(1), sqrt(2), ..., sqrt(nlat-1)
     # lats = 90 - np.arange(nlat)
     lats = np.arange(0, nlat, 1)

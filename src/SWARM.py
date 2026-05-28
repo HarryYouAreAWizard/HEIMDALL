@@ -1,5 +1,9 @@
 
 
+
+"""
+SWARM loading, plotting as well as some handling functions such as finding the closest approach to Tromsø, and plotting the trajectory near Tromsø.
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 

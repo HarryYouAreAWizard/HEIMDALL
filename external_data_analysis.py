@@ -1,10 +1,15 @@
 
 
 
+"""
 
+functions for handling import of TEC component timeseries and external componentns
+
+currenly only handles ACE solar wind data, but could be extended to handle other datasets as well
+
+"""
 
 import datetime
-from time import sleep
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -93,7 +98,7 @@ def plot_solar_wind_bz(time, bz, title):
 def main():
 
 
-    timeseries, timeseries_time, SWE, MFI = load()
+    timeseries, timeseries_time, SWE, MFI = load() # timeseries is the TEC compoents timeseries
     print(f"{SWE.keys() = }")
     print(f"{MFI.keys() = }")
 

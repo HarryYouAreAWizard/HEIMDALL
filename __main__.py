@@ -1,4 +1,10 @@
 
+
+
+"""main program for the HEIMDALL campaing project
+
+control flags can be found in the beginning of the main function
+"""
 # general imports
 import os
 import datetime
@@ -22,8 +28,8 @@ from principal_component_analysis import (
 from dataset_handler import build_large_dataset, interpolate_tec
 from centering import get_peaks, center_concomic, center_midday, center_midnight
 
-
-# changes depending on system
+# file system handling
+# change depending on system
 # file_seperator = "\\"
 file_seperator = "/"
 figurefolder = "figures" + file_seperator
@@ -32,6 +38,7 @@ datafolder = "/data/nonie/"
 
 
 def time_from_gps_files()->np.ndarray:
+    """Extract time information from the GPS files to create a time array for the TEC data."""
     path = "/data/nonie/tec_data"
     list_of_files = os.listdir(path)
     dates = []
@@ -421,7 +428,7 @@ def main()->None:
         np.save("components/components_geographic.npy", tec_int_components)
 
 
-
+    # following is decrepreated, as time is now extracted from GPS files
     # # construct time. Based on known time period. Should be updated with new data
     # time_start = datetime.datetime(year=2026, month=1, day=3, hour=0, minute=0, second=0).timestamp()
     # time_end = time_start +  tec_md.shape[2] * 60 * 5 # 5 minute interval

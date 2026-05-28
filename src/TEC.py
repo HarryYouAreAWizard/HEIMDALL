@@ -1,4 +1,13 @@
 
+
+"""
+
+Decrepreated, since the project uses the TEC.TEC.py 
+
+"""
+
+
+
 import numpy as np
 import matplotlib.pyplot as plt
 

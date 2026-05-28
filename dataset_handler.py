@@ -1,4 +1,11 @@
 
+
+"""
+functions for handling the TEC datasets, including loading, merging, and interpolation.
+"""
+
+
+
 import os
 import numpy as np
 import matplotlib.pyplot as plt

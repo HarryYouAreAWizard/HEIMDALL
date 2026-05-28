@@ -1,11 +1,19 @@
 
+
+"""
+various methods for centering the TEC images, 
+ - midday
+ - midnight
+ - gausian fitting
+
+"""
 import numpy as np
 from numpy import array, zeros, roll, cos, sin
 from scipy.optimize import curve_fit
 
 
-#----------------------centering----------------------
-def center_midday(tec: np.ndarray) -> np.ndarray:
+#----------------------centering by rolling----------------------
+def center_midday(tec: np.ndarray)->np.ndarray:
     """Shift the TEC images uniformly, only according to the time of day"""
     rolled_tec = zeros(tec.shape)
     for temporal_index in range(tec.shape[2]):
@@ -19,7 +27,7 @@ def center_midday(tec: np.ndarray) -> np.ndarray:
     rolled_tec = roll(rolled_tec, 180, axis=1) # get peak in center
     return rolled_tec
 
-def center_midnight(tec: np.ndarray) -> np.ndarray:
+def center_midnight(tec: np.ndarray)->np.ndarray:
     """Shift the TEC images uniformly, only according to the time of day"""
     rolled_tec = zeros(tec.shape)
     for temporal_index in range(tec.shape[2]):
@@ -30,8 +38,8 @@ def center_midnight(tec: np.ndarray) -> np.ndarray:
     return rolled_tec
 
 
-
-def _gaussian_2d(coords: tuple, amp: float, x0: float, y0: float, sigma_x: float, sigma_y: float, theta: float, offset: float) -> array:
+#----------------------centering by gaussian fitting----------------------
+def _gaussian_2d(coords: tuple, amp: float, x0: float, y0: float, sigma_x: float, sigma_y: float, theta: float, offset: float)->np.ndarray:
     """2D Gaussian function with rotation.
     Used to fit the TEC images and find the center of the peak. The function is defined as:
     G(x, y) = offset + amp * exp(-((x_rot^2 / (2 * sigma_x^2)) + (y_rot^2 / (2 * sigma_y^2))))

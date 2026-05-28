@@ -1,5 +1,17 @@
 
 
+
+"""
+
+functions for loading such as EISCAT, ACE, and TEC datasets. The aim of this programs
+is to have data in the same format, easing the data analysis
+
+SWARM not implemented yet
+
+Also includes some plotting functions for EISCAT data.
+
+"""
+
 import numpy as np
 from numpy import array, linspace
 import datetime
