@@ -160,6 +160,13 @@ def map_frame_to_mlt(
     mapping_valid: np.ndarray,
     dtime: dt.datetime,
 ) -> np.ndarray:
+    """Map a geographic TEC frame into magnetic latitude / MLT bins.
+
+    Bins with no finite source data are left as NaN.  Downstream sparse PCA
+    interprets these NaNs as weight 0.  Bins with one or more finite source
+    samples receive the average TEC value and therefore enter the PCA with
+    binary weight 1, independent of how many source samples contributed.
+    """
     from apexpy import Apex
 
     n_lat, n_lon = frame.shape
@@ -231,6 +238,7 @@ def project_all_times(
     lat_max: float,
     dtype: str,
     mlt_mapping: tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, list[tuple[dt.datetime, dt.datetime]]] | None = None,
+    coverage_path: Path | None = None,
 ) -> None:
     coefficients = np.lib.format.open_memmap(
         output_path,
@@ -238,6 +246,7 @@ def project_all_times(
         dtype="float64",
         shape=(component_columns.shape[1], total_times),
     )
+    coverage = np.zeros(shape, dtype=np.uint32) if coverage_path is not None else None
     for start in range(0, total_times, project_chunk):
         stop = min(start + project_chunk, total_times)
         print(f"projecting frames {start}:{stop}", flush=True)
@@ -251,6 +260,8 @@ def project_all_times(
             dtype=dtype,
             mlt_mapping=mlt_mapping,
         )
+        if coverage is not None:
+            coverage += np.isfinite(chunk).sum(axis=2, dtype=np.uint32)
         coefficients[:, start:stop] = compute_sparse_time_coefficients(
             component_columns,
             chunk,
@@ -261,6 +272,8 @@ def project_all_times(
             lat_max=lat_max,
         )
         coefficients.flush()
+    if coverage_path is not None and coverage is not None:
+        np.save(coverage_path, coverage)
 
 
 def main() -> None:
@@ -292,6 +305,19 @@ def main() -> None:
         coordinate_system=coordinate_system,
         dtype=args.dtype,
         mlt_mapping=mlt_mapping,
+    )
+    training_coverage = np.isfinite(training_cube).sum(axis=2, dtype=np.uint32)
+    np.save(output_dir / f"training_observed_count_global_sparse_{coordinate_system}.npy", training_coverage)
+    np.save(
+        output_dir / f"training_observed_fraction_global_sparse_{coordinate_system}.npy",
+        training_coverage / float(training_cube.shape[2]),
+    )
+    print(
+        "training observed fraction: "
+        f"min={np.nanmin(training_coverage / float(training_cube.shape[2])):.4g} "
+        f"mean={np.nanmean(training_coverage / float(training_cube.shape[2])):.4g} "
+        f"max={np.nanmax(training_coverage / float(training_cube.shape[2])):.4g}",
+        flush=True,
     )
 
     component_images, component_columns, training_coefficients, mean = find_sparse_principal_components(
@@ -328,6 +354,7 @@ def main() -> None:
         lat_max=args.lat_max,
         dtype=args.dtype,
         mlt_mapping=mlt_mapping,
+        coverage_path=output_dir / f"observed_count_global_sparse_{coordinate_system}.npy",
     )
     print("done")
 
