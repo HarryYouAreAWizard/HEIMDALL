@@ -26,17 +26,17 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--components-out",
-        default="/data/nonie/masterdata/components_sparse.npy",
+        default=os.path.expanduser("~/heimdall_sparse_results/components_sparse.npy"),
         help="Output .npy file for sparse PCA component images.",
     )
     parser.add_argument(
         "--coefficients-out",
-        default="/data/nonie/masterdata/time_series_sparse.npy",
+        default=os.path.expanduser("~/heimdall_sparse_results/time_series_sparse.npy"),
         help="Output .npy file for sparse PCA time coefficients.",
     )
     parser.add_argument(
         "--mean-out",
-        default="/data/nonie/masterdata/mean_sparse.npy",
+        default=os.path.expanduser("~/heimdall_sparse_results/mean_sparse.npy"),
         help="Output .npy file for the sparse observed-sample mean image.",
     )
     parser.add_argument("--components", type=int, default=9, help="Number of principal components.")
