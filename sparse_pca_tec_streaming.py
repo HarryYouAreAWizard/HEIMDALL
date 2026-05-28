@@ -31,6 +31,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--jobs", type=int, default=1, help="Worker processes for ALS/projection solves.")
     parser.add_argument("--sample-frames", type=int, default=8192, help="Random time frames used for PCA training.")
     parser.add_argument("--project-chunk", type=int, default=288, help="Frames per projection chunk.")
+    parser.add_argument(
+        "--init-sample-columns",
+        type=int,
+        default=8192,
+        help="Maximum number of training frames used only for initial SVD. ALS still fits all training frames.",
+    )
     parser.add_argument("--ridge", type=float, default=1e-6, help="Small ridge term for weighted least squares.")
     parser.add_argument("--random-state", type=int, default=0, help="Random seed for training-frame selection.")
     parser.add_argument("--lat-min", type=float, default=-90.0, help="Minimum latitude of global TEC grid.")
@@ -435,7 +441,7 @@ def main() -> None:
         args.components,
         n_iterations=args.iterations,
         ridge=args.ridge,
-        sample_columns=sample_count,
+        sample_columns=min(args.init_sample_columns, sample_count),
         random_state=args.random_state,
         n_jobs=args.jobs,
         lat_min=args.lat_min,
