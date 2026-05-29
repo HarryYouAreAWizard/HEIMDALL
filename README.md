@@ -6,6 +6,14 @@ This repository contains tools for studying large-scale VTEC variability using s
 
 The project can be run either by running `__main__.py` or by running the `HEIMDALL` folder as a project. Control flags for the legacy workflow can be set in the `__main__.py` main function.
 
+## Video
+
+[![HEIMDALL video](https://img.youtube.com/vi/YV-Uy4EbW-A/hqdefault.jpg)](https://www.youtube.com/watch?v=YV-Uy4EbW-A)
+
+```html
+<iframe width="560" height="315" src="https://www.youtube.com/embed/YV-Uy4EbW-A?si=D7TpfUjnIMRnvF7p" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+```
+
 The PCA training is performed directly from the original HDF5 VTEC files. For each selected frame, the code uses `apexpy` to convert geographic coordinates to quasi-dipole magnetic latitude and MLT, grids the samples onto a 128 x 128 northern polar projection down to 50 degrees magnetic latitude, averages multiple samples falling in the same pixel, and leaves unobserved pixels as `NaN`. Sparse PCA then treats finite pixels as observed and missing pixels as zero-weight samples. A projection-area weighting map is applied so the polar projection does not overemphasize the outer part of the disk.
 
 The latest run used all 208800 VTEC frames and trained 32 sparse principal vectors. The resulting principal vectors are shown below.
